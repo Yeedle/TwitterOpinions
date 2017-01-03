@@ -1,6 +1,8 @@
 library(twitteR)
 library(dplyr)
 
+source("utils.R")
+
 afinn <- get_sentiments("afinn")
 nrc <- get_sentiments("nrc")
 bing <- get_sentiments("bing")
@@ -25,12 +27,16 @@ resolved_disputes <- disputes %>%
                          .$sentiment == "negative" ~ -1),
          consensus = afinn + bing + nrc) %>%
   filter(!is.na(consensus)) %>%
-  mutate(sentiment = ifelse(consensus == 1, "positive","negative")) %>%
+  mutate(sentiment = ifelse(consensus == 1, "positive", "negative")) %>%
   select(word, sentiment)
 
-combined <- full_join(augmented_afinn, bing, by = c("word", "sentiment")) %>% 
+lexicon <- full_join(augmented_afinn, bing, by = c("word", "sentiment")) %>% 
   full_join(nrc_sentiments, by = c("word", "sentiment")) %>%
   select(word, sentiment) %>% 
   filter(word %notin% disputes$word) %>%
   full_join(resolved_disputes, by = c("word", "sentiment"))
+
+save(lexicon, file="lexicon.Rdata")
+
+rm(list = ls())
 
