@@ -34,7 +34,8 @@ lexicon <- full_join(augmented_afinn, bing, by = c("word", "sentiment")) %>%
   full_join(nrc_sentiments, by = c("word", "sentiment")) %>%
   select(word, sentiment) %>% 
   filter(word %notin% disputes$word) %>%
-  full_join(resolved_disputes, by = c("word", "sentiment"))
+  full_join(resolved_disputes, by = c("word", "sentiment")) %>%
+  mutate(sentiment = ifelse(sentiment == "positive", 1 , -1))
 
 save(lexicon, file="lexicon.Rdata")
 
