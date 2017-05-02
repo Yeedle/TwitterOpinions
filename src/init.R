@@ -20,7 +20,7 @@ result_type <- "recent"
 
 regex <- "https://t.co/[A-Za-z\\d]+|http://[A-Za-z\\d]+|\\.?@[A-Za-z0-9_]+|&amp;|&lt;|&gt;|RT|rt|https|t.co"
 
-term <- "hitler"
+term <- "Donald Trump"
 
 result <- searchTwitter(term, n, lang = language, resultType = result_type) %>%
   map_df(as.data.frame) %>% 
